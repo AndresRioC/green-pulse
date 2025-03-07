@@ -1,11 +1,14 @@
-import express from "express";
-import morgan from "morgan";
-import cors from "cors";
+import express from 'express'
+import morgan from 'morgan'
+import cors from 'cors'
 
-const app = express();
+const app = express()
 
-app.use(morgan("dev"));
-app.use(cors());
-app.use(express.json());
+app.use(morgan('dev'))
+app.use(cors())
+app.use(express.json())
 
-export default app;
+app.get('/current')
+app.get('/history')
+
+export default app

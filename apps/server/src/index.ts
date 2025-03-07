@@ -1,6 +1,6 @@
-import app from "./app.ts";
+import app from './app.ts'
 
-const PORT = 3000;
+const PORT = 3000
 app.listen(PORT, () => {
-  console.log(`✍️  Server listenting on http://localhost:${PORT}…`);
-});
+  console.log(`✍️  Server listenting on http://localhost:${PORT}…`)
+})
