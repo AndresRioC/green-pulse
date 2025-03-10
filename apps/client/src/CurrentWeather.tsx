@@ -10,7 +10,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import SearchContext from "./App.ts";
 
 export default function DropdownMetrics() {
   const search: string = useContext(SearchContext);
