@@ -1,10 +1,7 @@
-import { React, useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { SearchContext } from "./App";
 import { getCurrentWeather } from "./routes/weather-api";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import About from "./pages/About";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,27 +13,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const [current, setCurrent] = useState(null);
-const search = useContext(SearchContext);
-const [weatherMetrics, setWeatherMetrics] = useState([]);
-const [airMetrics, setAirMetrics] = useState([]);
+export default function DropdownMetrics() {
+  const [current, setCurrent] = useState(null);
+  const search = useContext(SearchContext);
+  const [weatherMetrics, setWeatherMetrics] = useState([]);
+  const [airMetrics, setAirMetrics] = useState([]);
 
-const weatherResponse = await getCurrentWeather(search);
-setCurrent(weatherResponse);
-setWeatherMetrics(Object.keys(weatherResponse.main));
-setAirMetrics(Object.keys(weatherResponse.list[0].components));
+  const weatherResponse = getCurrentWeather(search);
+  setCurrent(weatherResponse);
+  setWeatherMetrics(Object.keys(weatherResponse.main));
+  setAirMetrics(Object.keys(weatherResponse.list[0].components));
 
-useEffect(() => {
-  if (search) {
-    currentWeather();
-  }
-}, [search]); // Run effect when search changes
+  useEffect(() => {
+    if (search) {
+      currentWeather();
+    }
+  }, [search]); // Run effect when search changes
 
-if (!current) return <p>Loading...</p>;
+  if (!current) return <p>Loading...</p>;
 
-type Checked = DropdownMenuCheckboxItemProps["checked"];
+  type Checked = DropdownMenuCheckboxItemProps["checked"];
 
-export function DropdownMenuCheckboxes() {
   const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false);
 
   return (

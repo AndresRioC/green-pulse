@@ -2,12 +2,16 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
-import { BrowserRouter } from "react-router";
+import Metrics from "./Metrics";
+import { RouterProvider, createBrowserRouter } from "react-router"; // Using react-router
+
+const router = createBrowserRouter([
+  { path: "/", element: <App /> },
+  { path: "/metrics", element: <Metrics /> },
+]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <RouterProvider router={router} />
   </StrictMode>
 );
