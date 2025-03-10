@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { getCurrentWeather } from "./routes/weather-api";
 // import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -11,25 +11,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export default function DropdownMetrics() {
-  const search: string = useContext(SearchContext);
+export default function DropdownMetrics({ city }) {
+  console.log(city);
   const [currentMetrics, setCurrentMetrics] = useState({});
   const [weatherMetrics, setWeatherMetrics] = useState([]);
   const [airMetrics, setAirMetrics] = useState([]);
 
-  async function currentWeather(search: string) {
-    const weatherResponse = await getCurrentWeather(search);
+  async function currentWeather(location: string) {
+    const weatherResponse = await getCurrentWeather(location);
     setCurrentMetrics(weatherResponse);
     setWeatherMetrics(Object.keys(weatherResponse.main));
     setAirMetrics(Object.keys(weatherResponse.list[0].components));
-    return;
+    return weatherResponse;
   }
+  console.log(currentWeather(city));
 
-  useEffect(() => {
-    if (search) {
-      currentWeather(search);
-    }
-  }, [search]);
+  // useEffect(() => {
+  //   if (city) {
+  //     currentWeather(city);
+  //   }
+  // }, [city]);
 
   if (!currentMetrics) return <p>Loading...</p>;
 

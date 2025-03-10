@@ -1,14 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router";
 import DropdownMetrics from "./CurrentWeather";
 
 function Metrics() {
   const params = useParams();
-  console.log({ params });
+  const city = params.city;
 
   return (
     <div>
-      <h1>Welcome to {params.city}</h1>
-      {/* <DropdownMetrics /> */}
+      <h1>Welcome to {city}</h1>
+      <DropdownMetrics city={city} />
     </div>
   );
 }

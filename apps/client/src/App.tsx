@@ -6,16 +6,13 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router"; // Using Link from react-router
 
-export const SearchContext = React.createContext("");
-
 function App() {
-  const [search, setSearch] = useState("");
+  const [city, setCity] = useState("");
 
   return (
-    // <SearchContext.Provider value={search}>
     <>
       <NavigationMenu>
         <NavigationMenuList>
@@ -36,14 +33,13 @@ function App() {
         <Input
           type="text"
           placeholder="Write a location..."
-          onChange={(e) => setSearch(e.target.value.toLowerCase())}
+          onChange={(e) => setCity(e.target.value.toLowerCase())}
         />
-        <Link to={`/metrics/${search}`}>
+        <Link to={`/metrics/${city}`}>
           <Button>Search</Button>
         </Link>
       </div>
     </>
-    // </SearchContext.Provider>
   );
 }
 
