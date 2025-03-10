@@ -1,43 +1,73 @@
-import { useEffect, useState } from "react";
-import WalletAPI from "./WalletAPI";
-import { EntryCard } from "@contentful/f36-components";
-import moment from "moment";
+import { React, useEffect, useState, useContext } from "react";
+import { SearchContext } from "./App";
+import { getCurrentWeather } from "./routes/weather-api";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import About from "./pages/About";
 
-export default function TransactionList() {
-  const [wallet, setWallet] = useState([]);
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-  async function getCurrentWallet() {
-    const currentWallet = await WalletAPI.getWallet();
-    setWallet(currentWallet);
-    console.log(currentWallet);
+const [current, setCurrent] = useState(null);
+const search = useContext(SearchContext);
+const [weatherMetrics, setWeatherMetrics] = useState([]);
+const [airMetrics, setAirMetrics] = useState([]);
+
+const weatherResponse = await getCurrentWeather(search);
+setCurrent(weatherResponse);
+setWeatherMetrics(Object.keys(weatherResponse.main));
+setAirMetrics(Object.keys(weatherResponse.list[0].components));
+
+useEffect(() => {
+  if (search) {
+    currentWeather();
   }
+}, [search]); // Run effect when search changes
 
-  useEffect(() => {
-    getCurrentWallet();
-  }, []);
+if (!current) return <p>Loading...</p>;
 
-  console.log(wallet);
+type Checked = DropdownMenuCheckboxItemProps["checked"];
 
-  if (!wallet.length) return <></>;
+export function DropdownMenuCheckboxes() {
+  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false);
 
   return (
-    <>
-      <div>
-        Current balance: {wallet[0].balance + wallet[0].currency}
-        <ul>
-          {wallet[0].transactions.map((currentTransaction) => (
-            <li key={currentTransaction._id}>
-              <EntryCard
-                status={currentTransaction.type}
-                title={currentTransaction.amount + wallet[0].currency}
-                contentType={moment(currentTransaction.createdAt)
-                  .startOf("day")
-                  .fromNow()}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">Metrics</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Weather</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {current}
+        {weatherMetrics.map((currentMetric: string) => (
+          <DropdownMenuCheckboxItem
+            checked={showStatusBar}
+            onCheckedChange={setShowStatusBar}
+          >
+            {currentMetric}
+          </DropdownMenuCheckboxItem>
+        ))}
+        <DropdownMenuLabel>Air Quality</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {current}
+        {airMetrics.map((currentMetric: string) => (
+          <DropdownMenuCheckboxItem
+            checked={showStatusBar}
+            onCheckedChange={setShowStatusBar}
+          >
+            {currentMetric}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
