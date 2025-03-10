@@ -6,10 +6,10 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { useState, createContext } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router"; // Using Link from react-router
 
-export const SearchContext = createContext("");
+export const SearchContext = React.createContext("");
 
 function App() {
   const [search, setSearch] = useState("");
@@ -39,7 +39,7 @@ function App() {
             onChange={(e) => setSearch(e.target.value)}
           />
           <Link to="/metrics">
-            <Button>Go to Metrics</Button>
+            <Button>Search</Button>
           </Link>
         </div>
       </>

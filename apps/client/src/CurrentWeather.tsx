@@ -1,8 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-import { SearchContext } from "./App";
 import { getCurrentWeather } from "./routes/weather-api";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-
+// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,29 +10,33 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import SearchContext from "./App.ts";
 
 export default function DropdownMetrics() {
-  const [current, setCurrent] = useState(null);
-  const search = useContext(SearchContext);
+  const search: string = useContext(SearchContext);
+  const [currentMetrics, setCurrentMetrics] = useState({});
   const [weatherMetrics, setWeatherMetrics] = useState([]);
   const [airMetrics, setAirMetrics] = useState([]);
 
-  const weatherResponse = getCurrentWeather(search);
-  setCurrent(weatherResponse);
-  setWeatherMetrics(Object.keys(weatherResponse.main));
-  setAirMetrics(Object.keys(weatherResponse.list[0].components));
+  async function currentWeather(search: string) {
+    const weatherResponse = await getCurrentWeather(search);
+    setCurrentMetrics(weatherResponse);
+    setWeatherMetrics(Object.keys(weatherResponse.main));
+    setAirMetrics(Object.keys(weatherResponse.list[0].components));
+    return;
+  }
 
   useEffect(() => {
     if (search) {
-      currentWeather();
+      currentWeather(search);
     }
-  }, [search]); // Run effect when search changes
+  }, [search]);
 
-  if (!current) return <p>Loading...</p>;
+  if (!currentMetrics) return <p>Loading...</p>;
 
-  type Checked = DropdownMenuCheckboxItemProps["checked"];
+  // type Checked = DropdownMenuCheckboxItemProps["checked"];
 
-  const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false);
+  // const [showStatusBar, setShowStatusBar] = React.useState<Checked>(false);
 
   return (
     <DropdownMenu>
@@ -44,22 +46,22 @@ export default function DropdownMetrics() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Weather</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {current}
+        {/* {current} */}
         {weatherMetrics.map((currentMetric: string) => (
           <DropdownMenuCheckboxItem
-            checked={showStatusBar}
-            onCheckedChange={setShowStatusBar}
+          // checked={showStatusBar}
+          // onCheckedChange={setShowStatusBar}
           >
             {currentMetric}
           </DropdownMenuCheckboxItem>
         ))}
         <DropdownMenuLabel>Air Quality</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {current}
+        {/* {current} */}
         {airMetrics.map((currentMetric: string) => (
           <DropdownMenuCheckboxItem
-            checked={showStatusBar}
-            onCheckedChange={setShowStatusBar}
+          // checked={showStatusBar}
+          // onCheckedChange={setShowStatusBar}
           >
             {currentMetric}
           </DropdownMenuCheckboxItem>
