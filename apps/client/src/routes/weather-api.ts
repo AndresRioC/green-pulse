@@ -2,6 +2,7 @@ const OPENWEATHER_BASE_URL = import.meta.env.VITE_OPENWEATHER_BASE_URL;
 const OPENWEATHER_TOKEN = import.meta.env.VITE_OPENWEATHER_TOKEN;
 const OIKOLAB_BASE_URL = import.meta.env.VITE_OIKOLAB_BASE_URL;
 const OIKOLAB_TOKEN = import.meta.env.VITE_OIKOLAB_TOKEN;
+//Avg temp Ont Mar 11 5y?
 
 export async function getCurrentWeather(cityname: string) {
   const weatherResponse = await fetch(

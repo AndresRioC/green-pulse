@@ -1,15 +1,17 @@
 import { useParams } from "react-router";
-import DropdownMetrics from "./CurrentWeather";
+import DropdownMetrics from "./DropdownMetrics";
+import Navigation from "./Navigation.tsx";
 
 function Metrics() {
   const params = useParams();
   const city = params.city;
 
   return (
-    <div>
-      <h1>Welcome to {city}</h1>
+    <>
+      <Navigation />
+      <h1>Select your climate metrics</h1>
       <DropdownMetrics city={city} />
-    </div>
+    </>
   );
 }
 
