@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCurrentWeather } from "./routes/weather-api";
-// import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import moment from "moment-timezone";
+import { ChartComponent } from "./ChartComponent"; // Import your ChartComponent
+
+type Checked = DropdownMenuCheckboxItemProps["checked"];
 
 export default function DropdownMetrics({ city }) {
   const [currentMetrics, setCurrentMetrics] = useState({});
@@ -19,35 +23,39 @@ export default function DropdownMetrics({ city }) {
   const [location, setLocation] = useState("");
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   async function currentWeather(location: string) {
     const weatherResponse = await getCurrentWeather(location);
-    setCurrentMetrics(weatherResponse);
+    const weatherData = {
+      feels_like: weatherResponse.main.feels_like,
+      grnd_level: weatherResponse.main.grnd_level,
+      humidity: weatherResponse.main.humidity,
+      pressure: weatherResponse.main.pressure,
+      sea_level: weatherResponse.main.sea_level,
+      temp: weatherResponse.main.temp,
+      temp_max: weatherResponse.main.temp_max,
+      temp_min: weatherResponse.main.temp_min,
+      co: weatherResponse.list[0].components.co,
+      nh3: weatherResponse.list[0].components.nh3,
+      no: weatherResponse.list[0].components.no,
+      no2: weatherResponse.list[0].components.no2,
+      o3: weatherResponse.list[0].components.o3,
+      pm2_5: weatherResponse.list[0].components.pm2_5,
+      pm10: weatherResponse.list[0].components.pm10,
+      so2: weatherResponse.list[0].components.so2,
+      country: weatherResponse.sys.country,
+      name: weatherResponse.name,
+    };
+    setCurrentMetrics(weatherData);
     setWeatherMetrics(Object.keys(weatherResponse.main));
     setAirMetrics(Object.keys(weatherResponse.list[0].components));
     setLocation(`${weatherResponse.name}, ${weatherResponse.sys.country}`);
     setLat(`${weatherResponse.coord.lat}`);
     setLon(`${weatherResponse.coord.lon}`);
-    setStartDate(roundTime(moment().subtract(50, "years")));
-    setEndDate(roundTime(moment()));
     return weatherResponse;
   }
 
-  console.log(startDate, endDate);
-
-  function roundTime(date) {
-    const utcDate = moment(date).utc();
-    const minutes = utcDate.minutes();
-    if (minutes < 30) {
-      utcDate.set({ minutes: 0, seconds: 0, milliseconds: 0 });
-    } else {
-      utcDate.add(1, "hour").set({ minutes: 0, seconds: 0, milliseconds: 0 });
-    }
-    const localDate = utcDate.local();
-    return localDate.toISOString();
-  }
+  console.log(currentMetrics);
 
   useEffect(() => {
     if (city) {
@@ -55,29 +63,15 @@ export default function DropdownMetrics({ city }) {
     }
   }, [city]);
 
-  // if (currentMetrics === null) return <p>Loading...</p>;
-
-  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: Checked }>(
     {}
   );
 
   const handleCheckedChange = (metric: string) => {
     setCheckedItems((prevCheckedItems) => {
-      console.log("Previous state:", prevCheckedItems);
-      // Step 1: Copy the previous state
-      const updatedCheckedItems = { ...prevCheckedItems };
-      // Step 2: Determine current state of the checkbox
-      const isCurrentlyChecked = updatedCheckedItems[metric] || false;
-      console.log(
-        `Metric: ${metric}, Previously checked: ${isCurrentlyChecked}`
-      );
-      // Step 3: Toggle the checkbox state
-      updatedCheckedItems[metric] = !isCurrentlyChecked;
-      console.log(
-        `Metric: ${metric}, Now checked: ${updatedCheckedItems[metric]}`
-      );
-      // Step 4: Return the updated state
-      return updatedCheckedItems;
+      const isCurrentlyChecked = prevCheckedItems[metric] || false;
+      const newChecked: Checked = !isCurrentlyChecked;
+      return { ...prevCheckedItems, [metric]: newChecked };
     });
   };
 
@@ -88,7 +82,7 @@ export default function DropdownMetrics({ city }) {
         <DropdownMenuTrigger asChild>
           <Button variant="outline">Metrics</Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start" className="w-56">
+        <DropdownMenuContent align="start" className="w-56">
           <DropdownMenuLabel>Weather</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {weatherMetrics.map((currentMetric: string) => (
@@ -100,6 +94,7 @@ export default function DropdownMetrics({ city }) {
               {currentMetric}
             </DropdownMenuCheckboxItem>
           ))}
+          <DropdownMenuSeparator />
           <DropdownMenuLabel>Air Quality</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {airMetrics.map((currentMetric: string) => (
@@ -113,6 +108,20 @@ export default function DropdownMetrics({ city }) {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
+      {/* Render charts based on checked items */}
+      {Object.keys(checkedItems).map((metric) => {
+        if (checkedItems[metric]) {
+          return (
+            <ChartComponent
+              key={metric}
+              metric={metric}
+              data={currentMetrics[metric]} // Pass the data related to the metric if necessary
+            />
+          );
+        }
+        return null; // Don't render if the metric is unchecked
+      })}
     </>
   );
 }

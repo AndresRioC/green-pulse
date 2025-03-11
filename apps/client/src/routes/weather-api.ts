@@ -6,7 +6,7 @@ const OIKOLAB_TOKEN = import.meta.env.VITE_OIKOLAB_TOKEN;
 
 export async function getCurrentWeather(cityname: string) {
   const weatherResponse = await fetch(
-    `${OPENWEATHER_BASE_URL}weather?q=${cityname}&appid=${OPENWEATHER_TOKEN}`
+    `${OPENWEATHER_BASE_URL}weather?q=${cityname}&appid=${OPENWEATHER_TOKEN}&units=metric`
   );
   const weatherData = await weatherResponse.json();
   console.log(weatherData);
