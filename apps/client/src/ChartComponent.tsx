@@ -1,5 +1,6 @@
 import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { fetchHistoricalData } from "./routes/weather-api";
 
 import {
   Card,
@@ -15,6 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useState } from "react";
 const chartData = [
   { month: "January", desktop: 186 },
   { month: "February", desktop: 305 },
@@ -31,7 +33,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartComponent({ metric, data }) {
+export function ChartComponent({ metric, data, endDate, lat, lon }) {
+  const [historicalData, setHistoricalData] = useState({});
+
+  async function historyWeather(endDate, metric, lat, lon) {
+    const weatherResponse = await fetchHistoricalData(
+      endDate,
+      metric,
+      lat,
+      lon
+    );
+    setHistoricalData(weatherResponse);
+  }
   return (
     <Card>
       <CardHeader>
@@ -44,7 +57,7 @@ export function ChartComponent({ metric, data }) {
         <ChartContainer config={chartConfig}>
           <AreaChart
             accessibilityLayer
-            data={chartData}
+            data={historicalData}
             margin={{
               left: 12,
               right: 12,

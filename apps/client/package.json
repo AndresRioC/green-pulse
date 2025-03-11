@@ -21,6 +21,7 @@
     "lucide-react": "^0.479.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.47",
+    "openai": "^4.87.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",

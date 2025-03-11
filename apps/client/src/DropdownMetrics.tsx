@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getCurrentWeather } from "./routes/weather-api";
+import moment from "moment";
+import { getCurrentWeather, fetchHistoricalData } from "./routes/weather-api";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import moment from "moment-timezone";
 import { ChartComponent } from "./ChartComponent"; // Import your ChartComponent
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
@@ -23,6 +22,7 @@ export default function DropdownMetrics({ city }) {
   const [location, setLocation] = useState("");
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   async function currentWeather(location: string) {
     const weatherResponse = await getCurrentWeather(location);
@@ -52,6 +52,8 @@ export default function DropdownMetrics({ city }) {
     setLocation(`${weatherResponse.name}, ${weatherResponse.sys.country}`);
     setLat(`${weatherResponse.coord.lat}`);
     setLon(`${weatherResponse.coord.lon}`);
+    setEndDate(moment().format("MMMM Do YYYY, h:mm:ss a"));
+
     return weatherResponse;
   }
 
@@ -116,7 +118,10 @@ export default function DropdownMetrics({ city }) {
             <ChartComponent
               key={metric}
               metric={metric}
-              data={currentMetrics[metric]} // Pass the data related to the metric if necessary
+              data={currentMetrics[metric]}
+              endDate={endDate}
+              lat={lat}
+              lon={lon}
             />
           );
         }
