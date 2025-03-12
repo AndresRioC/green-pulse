@@ -1,7 +1,8 @@
 import { useParams, useLocation, useNavigate } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Navigation from "../myComponents/Navigation.tsx";
 import { ChartComponent } from "../myComponents/ChartComponent.tsx";
+import { getCurrentWeather } from "../routes/weather-api.ts";
 
 function Historical() {
   const params = useParams();
@@ -9,17 +10,13 @@ function Historical() {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentMetrics, setCurrentMetrics] = useState({});
-  const [location, setLocation] = useState("");
-  const [endDate, setEndDate] = useState("");
 
-  const navigate = useNavigate(); // **Change 2: Initialize `useNavigate` hook**
-
-  async function currentWeather(location: string) {
-    const weatherResponse = await getCurrentWeather(location);
+  async function currentWeather(city: string) {
+    const weatherResponse = await getCurrentWeather(city);
     const weatherData = {
       humidity: weatherResponse.main.humidity,
       pressure: weatherResponse.main.pressure,
-      temp: weatherResponse.main.temp,
+      temperature: weatherResponse.main.temp,
       co: weatherResponse.list[0].components.co,
       nh3: weatherResponse.list[0].components.nh3,
       no: weatherResponse.list[0].components.no,
@@ -32,11 +29,15 @@ function Historical() {
       city: weatherResponse.name,
     };
     setCurrentMetrics(weatherData);
-    setLocation(`${weatherResponse.name}, ${weatherResponse.sys.country}`);
-    setEndDate(moment().format("MMMM Do YYYY, h:mm:ss a"));
 
     return weatherResponse;
   }
+
+  useEffect(() => {
+    if (city) {
+      currentWeather(city);
+    }
+  }, [city]);
 
   const queryParams = new URLSearchParams(location.search);
   const selectedMetrics = queryParams.get("metrics")?.split(",") || [];
@@ -55,7 +56,12 @@ function Historical() {
       <h1>Historical Climate Data for {city}</h1>
       {selectedMetrics.length > 0 ? (
         selectedMetrics.map((metric) => (
-          <ChartComponent key={metric} metric={metric} city={city} data={0} />
+          <ChartComponent
+            key={metric}
+            metric={metric}
+            city={city}
+            data={currentMetrics}
+          />
         ))
       ) : (
         <p>No metrics selected. Please go back and choose metrics.</p>

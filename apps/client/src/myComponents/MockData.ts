@@ -1,6 +1,6 @@
 const MockData = {
   london: {
-    temp: [
+    temperature: [
       { year: 2020, value: 11.0 },
       { year: 2021, value: 10.0 },
       { year: 2022, value: 12.0 },
@@ -79,7 +79,7 @@ const MockData = {
     ],
   },
   paris: {
-    temp: [
+    temperature: [
       { year: 2020, value: 9.0 },
       { year: 2021, value: 8.5 },
       { year: 2022, value: 9.2 },
@@ -158,7 +158,7 @@ const MockData = {
     ],
   },
   berlin: {
-    temp: [
+    temperature: [
       { year: 2020, value: 9.0 },
       { year: 2021, value: 8.5 },
       { year: 2022, value: 9.2 },
@@ -237,7 +237,7 @@ const MockData = {
     ],
   },
   rome: {
-    temp: [
+    temperature: [
       { year: 2020, value: 16.0 },
       { year: 2021, value: 15.0 },
       { year: 2022, value: 15.0 },
@@ -316,7 +316,7 @@ const MockData = {
     ],
   },
   barcelona: {
-    temp: [
+    temperature: [
       { year: 2020, value: 14.0 },
       { year: 2021, value: 15.0 },
       { year: 2022, value: 16.0 },

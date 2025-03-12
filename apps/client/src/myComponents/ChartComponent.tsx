@@ -1,4 +1,3 @@
-import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 // import { fetchHistoricalData } from "./routes/weather-api";
 
@@ -35,7 +34,6 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function ChartComponent({ metric, data, city }) {
-  console.log(city, metric);
   const [historicalData, setHistoricalData] = useState([]);
   useEffect(() => {
     setHistoricalData(MockData[city][metric]);
@@ -55,7 +53,7 @@ export function ChartComponent({ metric, data, city }) {
       <CardHeader>
         <CardTitle>{metric}</CardTitle>
         <CardDescription>
-          The current {metric} is {data}
+          The current {metric} is {data[metric]}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -93,9 +91,7 @@ export function ChartComponent({ metric, data, city }) {
       <CardFooter>
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
+            <div className="flex items-center gap-2 font-medium leading-none"></div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
               2020 to 2024
             </div>

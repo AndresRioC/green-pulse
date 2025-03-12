@@ -1,7 +1,6 @@
 import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import moment from "moment";
 import { z } from "zod";
 import { toast } from "react-hot-toast"; // Use the toast from react-hot-toast
 import { Button } from "@/components/ui/button";
@@ -14,45 +13,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // **Change 1: Import `useNavigate`**
-import { getCurrentWeather } from "../routes/weather-api.ts";
 
 export function CheckboxMetrics({ city }) {
-  const [currentMetrics, setCurrentMetrics] = useState({});
-  const [location, setLocation] = useState("");
-  const [endDate, setEndDate] = useState("");
-
   const navigate = useNavigate(); // **Change 2: Initialize `useNavigate` hook**
-
-  async function currentWeather(location: string) {
-    const weatherResponse = await getCurrentWeather(location);
-    const weatherData = {
-      humidity: weatherResponse.main.humidity,
-      pressure: weatherResponse.main.pressure,
-      temp: weatherResponse.main.temp,
-      co: weatherResponse.list[0].components.co,
-      nh3: weatherResponse.list[0].components.nh3,
-      no: weatherResponse.list[0].components.no,
-      no2: weatherResponse.list[0].components.no2,
-      o3: weatherResponse.list[0].components.o3,
-      pm2_5: weatherResponse.list[0].components.pm2_5,
-      pm10: weatherResponse.list[0].components.pm10,
-      so2: weatherResponse.list[0].components.so2,
-      country: weatherResponse.sys.country,
-      city: weatherResponse.name,
-    };
-    setCurrentMetrics(weatherData);
-    setLocation(`${weatherResponse.name}, ${weatherResponse.sys.country}`);
-    setEndDate(moment().format("MMMM Do YYYY, h:mm:ss a"));
-
-    return weatherResponse;
-  }
 
   const items = [
     { id: "humidity", label: "Humidity(%)" },
     { id: "pressure", label: "Pressure(hPa)" },
-    { id: "temp", label: "Temperature(Celsius)" },
+    { id: "temperature", label: "Temperature(Celsius)" },
     { id: "co", label: "CO: Carbon Monoxide Concentration (μg/m3)" },
     { id: "nh3", label: "NH₃: Ammonia Concentration (μg/m3)" },
     { id: "no", label: "NO: Nitrogen Monoxide Concentration (μg/m3)" },
@@ -67,12 +36,6 @@ export function CheckboxMetrics({ city }) {
       message: "You have to select at least one item.",
     }),
   });
-
-  useEffect(() => {
-    if (city) {
-      currentWeather(city);
-    }
-  }, [city]);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
