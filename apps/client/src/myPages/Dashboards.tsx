@@ -1,4 +1,4 @@
-import Navigation from "./Navigation.tsx";
+import Navigation from "../myComponents/Navigation.tsx";
 
 function Dashboards() {
   return (

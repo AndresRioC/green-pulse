@@ -2,8 +2,8 @@ const OPENWEATHER_BASE_URL = import.meta.env.VITE_OPENWEATHER_BASE_URL;
 const OPENWEATHER_TOKEN = import.meta.env.VITE_OPENWEATHER_TOKEN;
 const OIKOLAB_BASE_URL = import.meta.env.VITE_OIKOLAB_BASE_URL;
 const OIKOLAB_TOKEN = import.meta.env.VITE_OIKOLAB_TOKEN;
-const CHATGPT_TOKEN = import.meta.env.VITE_CHATGPT_TOKEN;
-import OpenAI from "openai";
+// const CHATGPT_TOKEN = import.meta.env.VITE_CHATGPT_TOKEN;
+// import OpenAI from "openai";
 //Avg temp Ont Mar 11 5y?
 
 export async function getCurrentWeather(cityname: string) {
@@ -37,23 +37,23 @@ export async function getWeatherHistory(
   return historyData;
 }
 
-const openai = new OpenAI({
-  apiKey: CHATGPT_TOKEN,
-});
+// const openai = new OpenAI({
+//   apiKey: CHATGPT_TOKEN,
+// });
 
-export async function fetchHistoricalData(endDate, metric, lat, lon) {
-  const prompt = `Give past 20 years of ${metric} for (${lat}, ${lon}) on ${endDate}. Use metric units. Format as JSON {year: value}.`;
+// export async function fetchHistoricalData(endDate, metric, lat, lon) {
+//   const prompt = `Give past 20 years of ${metric} for (${lat}, ${lon}) on ${endDate}. Use metric units. Format as JSON {year: value}.`;
 
-  try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4",
-      messages: [{ role: "user", content: prompt }],
-      temperature: 0,
-    });
+//   try {
+//     const response = await openai.chat.completions.create({
+//       model: "gpt-4",
+//       messages: [{ role: "user", content: prompt }],
+//       temperature: 0,
+//     });
 
-    return JSON.parse(response.choices[0].message.content);
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
-}
+//     return JSON.parse(response.choices[0].message.content);
+//   } catch (error) {
+//     console.error("Error:", error);
+//     return null;
+//   }
+// }

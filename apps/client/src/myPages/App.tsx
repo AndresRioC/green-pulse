@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router"; // Using Link from react-router
-import Navigation from "./Navigation.tsx";
+import Navigation from "../myComponents/Navigation.tsx";
 
 function App() {
   const [city, setCity] = useState("");

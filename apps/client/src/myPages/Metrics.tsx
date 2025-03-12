@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
-import DropdownMetrics from "./DropdownMetrics";
-import Navigation from "./Navigation.tsx";
+import Navigation from "../myComponents/Navigation.tsx";
+import { CheckboxMetrics } from "../myComponents/CheckboxMetrics.tsx";
 
 function Metrics() {
   const params = useParams();
@@ -9,8 +9,7 @@ function Metrics() {
   return (
     <>
       <Navigation />
-      <h1>Select your climate metrics</h1>
-      <DropdownMetrics city={city} />
+      <CheckboxMetrics city={city} />
     </>
   );
 }

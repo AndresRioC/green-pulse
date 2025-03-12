@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { getCurrentWeather, fetchHistoricalData } from "./routes/weather-api";
+import { getCurrentWeather } from "../routes/weather-api";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,21 +20,14 @@ export default function DropdownMetrics({ city }) {
   const [weatherMetrics, setWeatherMetrics] = useState([]);
   const [airMetrics, setAirMetrics] = useState([]);
   const [location, setLocation] = useState("");
-  const [lat, setLat] = useState("");
-  const [lon, setLon] = useState("");
   const [endDate, setEndDate] = useState("");
 
   async function currentWeather(location: string) {
     const weatherResponse = await getCurrentWeather(location);
     const weatherData = {
-      feels_like: weatherResponse.main.feels_like,
-      grnd_level: weatherResponse.main.grnd_level,
       humidity: weatherResponse.main.humidity,
       pressure: weatherResponse.main.pressure,
-      sea_level: weatherResponse.main.sea_level,
       temp: weatherResponse.main.temp,
-      temp_max: weatherResponse.main.temp_max,
-      temp_min: weatherResponse.main.temp_min,
       co: weatherResponse.list[0].components.co,
       nh3: weatherResponse.list[0].components.nh3,
       no: weatherResponse.list[0].components.no,
@@ -44,14 +37,12 @@ export default function DropdownMetrics({ city }) {
       pm10: weatherResponse.list[0].components.pm10,
       so2: weatherResponse.list[0].components.so2,
       country: weatherResponse.sys.country,
-      name: weatherResponse.name,
+      city: weatherResponse.name,
     };
     setCurrentMetrics(weatherData);
-    setWeatherMetrics(Object.keys(weatherResponse.main));
-    setAirMetrics(Object.keys(weatherResponse.list[0].components));
+    setWeatherMetrics(["humidity", "pressure", "temp"]);
+    setAirMetrics(["co", "nh3", "no", "no2", "o3", "pm2_5", "pm10", "so2"]);
     setLocation(`${weatherResponse.name}, ${weatherResponse.sys.country}`);
-    setLat(`${weatherResponse.coord.lat}`);
-    setLon(`${weatherResponse.coord.lon}`);
     setEndDate(moment().format("MMMM Do YYYY, h:mm:ss a"));
 
     return weatherResponse;
@@ -61,6 +52,7 @@ export default function DropdownMetrics({ city }) {
 
   useEffect(() => {
     if (city) {
+      console.log("current city:", city);
       currentWeather(city);
     }
   }, [city]);
@@ -120,8 +112,8 @@ export default function DropdownMetrics({ city }) {
               metric={metric}
               data={currentMetrics[metric]}
               endDate={endDate}
-              lat={lat}
-              lon={lon}
+              city={currentMetrics.city}
+              country={currentMetrics.country}
             />
           );
         }
